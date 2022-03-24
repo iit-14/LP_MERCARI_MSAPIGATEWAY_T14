@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hd-service-deployment
+  labels:
+    app: hd-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hd-service
+  template:
+    metadata:
+      labels:
+        app: hd-service
+    spec:
+      containers:
+        - name: hd-service-server
+          image: iit14.azurecr.io/hd-api:latest
+          ports:
+            - containerPort: 3005
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hd-service
+  labels:
+    app: hd-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: hd-service
+  ports:
+    - port: 4000
+      targetPort: 3005
